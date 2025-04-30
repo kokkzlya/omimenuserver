@@ -1,0 +1,45 @@
+services:
+  postgres:
+    image: postgres:17-alpine3.20
+    environment:
+      POSTGRES_USER: omi
+      POSTGRES_PASSWORD: omi
+      POSTGRES_DB: omi
+
+  redis:
+    image: redis:7.2-alpine
+
+  init:
+    build:
+      context: ../
+      dockerfile: Dockerfile
+      target: init
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      SQL_URL: postgresql://omi:omi@postgres:5432/omi
+    command:
+      - poetry
+      - run
+      - alembic
+      - upgrade
+      - head
+      # - poetry run python -m src.cli run_product_seeder
+      # - poetry run python -m src.cli run_user_seeder
+
+  web:
+    build:
+      context: ../
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    depends_on:
+      - postgres
+      - redis
+      - init
+    environment:
+      SQL_URL: postgresql://omi:omi@postgres:5432/omi
+      REDIS_URL: redis://redis:6379
+      SECRET_KEY: e5b926ba90557f038ccc0047054f32dd67a54ce589a9649c9908eff7a43d9d4b
+    command: run_dev
