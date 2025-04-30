@@ -19,14 +19,10 @@ services:
       - redis
     environment:
       SQL_URL: postgresql://omi:omi@postgres:5432/omi
-    command:
-      - poetry
-      - run
-      - alembic
-      - upgrade
-      - head
-      # - poetry run python -m src.cli run_product_seeder
-      # - poetry run python -m src.cli run_user_seeder
+    command: >
+      bash -c "poetry run alembic upgrade head &&
+      poetry run python -m src.cli run_product_seeder &&
+      poetry run python -m src.cli run_user_seeder"
 
   web:
     build:
