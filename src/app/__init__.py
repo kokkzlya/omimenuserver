@@ -13,6 +13,10 @@ def create_app(config):
     app.register_blueprint(products_bp)
     CORS(app, resources={r"/*": {"origins": "*"}})
 
+    print(">>>>>>>>>>>", app.config["SQL_URL"])
+    print(">>>>>>>>>>>", app.config["REDIS_URL"])
+    print(">>>>>>>>>>>", app.config["SECRET_KEY"])
+
     db.init_app(app)
     di.init_app(app)
     auth_guard.login_manager.init_app(app)

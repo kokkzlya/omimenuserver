@@ -48,7 +48,7 @@ class ValidateAuthTokenAction:
             user_id = self.auth_repository.get_token(hashed_secret)
             if user_id is None:
                 return None
-            return user_id.decode("utf-8")
+            return user_id
         except jwt.ExpiredSignatureError:
             return None
         except jwt.InvalidTokenError:

@@ -1,7 +1,7 @@
 class CLI:
     def run_dev(self):
         from src.wsgi import app
-        app.run(debug=True)
+        app.run(debug=True, host="0.0.0.0", port=5000)  # noqa: S104
 
     def run_product_seeder(self):
         from src.wsgi import app

@@ -1,4 +1,5 @@
 import inject
+import redis
 from flask import Flask
 from sqlalchemy.orm import scoped_session
 
@@ -13,7 +14,7 @@ def init_app(app: Flask):
     def my_config(binder):
         binder.bind_to_constructor(scoped_session, lambda: session)
         binder.bind_to_constructor(
-            create_redis_client, lambda: create_redis_client(app),
+            redis.Redis, lambda: create_redis_client(app),
         )
 
         # repositories
